@@ -78,7 +78,13 @@ sudo systemctl restart docker
 ```
 
 #### Container Setup
-Build the docker container:
+We provide a docker image at DockerHub [segs-slam-images](https://hub.docker.com/repository/docker/tianciwen/segs-slam). 
+You can pull it:
+```bash
+docker pull tianciwen/segs-slam:1026
+```
+
+Or you can build the docker container:
 ```bash
 git clone https://github.com/leaner-forever/SEGS-SLAM
 cd SEGS-SLAM/docker
