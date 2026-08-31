@@ -1,0 +1,71 @@
+%YAML:1.0
+
+# TartanAir v1 Stereo Challenge calibration.
+# RGB images: 640x480
+# Intrinsics: fx=fy=320, cx=320, cy=240
+# Stereo baseline: 0.25 m
+
+File.version: "1.0"
+
+Camera.type: "PinHole"
+
+Camera1.fx: 320.0
+Camera1.fy: 320.0
+Camera1.cx: 320.0
+Camera1.cy: 240.0
+Camera1.k1: 0.0
+Camera1.k2: 0.0
+Camera1.p1: 0.0
+Camera1.p2: 0.0
+
+Camera2.fx: 320.0
+Camera2.fy: 320.0
+Camera2.cx: 320.0
+Camera2.cy: 240.0
+Camera2.k1: 0.0
+Camera2.k2: 0.0
+Camera2.p1: 0.0
+Camera2.p2: 0.0
+
+Camera.width: 640
+Camera.height: 480
+
+# The Stereo Challenge package does not provide image timestamps.
+# The adapter script synthesizes timestamps at 10 Hz for ordering/time bookkeeping.
+Camera.fps: 10.0
+
+# cv::imread returns BGR images.
+Camera.RGB: 0
+
+# ORB-SLAM3 close/far stereo point threshold.
+Stereo.ThDepth: 40.0
+
+# Right camera is translated by +0.25 m along the stereo x-axis relative to left.
+Stereo.T_c1_c2: !!opencv-matrix
+  rows: 4
+  cols: 4
+  dt: f
+  data: [1.0, 0.0, 0.0, 0.25,
+         0.0, 1.0, 0.0, 0.0,
+         0.0, 0.0, 1.0, 0.0,
+         0.0, 0.0, 0.0, 1.0]
+
+# ORB Extractor
+ORBextractor.nFeatures: 2400
+ORBextractor.scaleFactor: 1.2
+ORBextractor.nLevels: 8
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+# Viewer parameters (the TartanAir runner uses no_viewer for now)
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1.0
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2.0
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3.0
+Viewer.ViewpointX: 0.0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500.0
+Viewer.imageViewScale: 1.0
