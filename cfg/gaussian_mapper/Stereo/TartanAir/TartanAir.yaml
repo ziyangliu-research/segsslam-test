@@ -1,0 +1,147 @@
+%YAML:1.0
+
+# TartanAir v1 Stereo Challenge adapter configuration.
+# This intentionally stays close to the official EuRoC stereo settings so the
+# first run tests dataset compatibility rather than parameter tuning.
+
+#--------------------------------------------------------------------------------------------
+# Model Parameters
+#--------------------------------------------------------------------------------------------
+Model.sh_degree: 3
+Model.resolution: -1.0
+Model.white_background: 0
+Model.eval: 0
+
+Model.feat_dim: 32
+Model.n_offsets: 10
+Model.voxel_size: 0.001
+Model.update_depth: 3
+Model.update_init_factor: 16
+Model.update_hierachy_factor: 4
+
+Model.use_feat_bank: 0
+Model.appearance_dim: 0
+Model.lowpoly: 0
+Model.ds: 1
+Model.ratio: 1
+Model.undistorted: 0
+Model.embedding_dim: 200
+
+Model.add_opacity_dist: 0
+Model.add_cov_dist: 0
+Model.add_color_dist: 0
+
+#--------------------------------------------------------------------------------------------
+# Pipeline Parameters
+#--------------------------------------------------------------------------------------------
+Camera.z_near: 0.01
+Camera.z_far: 100.0
+Monocular.inactive_geo_densify_max_pixel_dist: 0.0
+
+# TartanAir has fx=320 and baseline=0.25 m. Inactive stereo geometry densification
+# is disabled below, but keep a valid CUDA StereoSGM range for future use.
+Stereo.min_disparity: 0
+Stereo.num_disparity: 256
+
+RGBD.min_depth: 0.0000000001
+RGBD.max_depth: 40.0
+
+Mapper.inactive_geo_densify: 0
+Mapper.depth_cache: 4
+Mapper.min_num_initial_map_kfs: 40
+Mapper.new_keyframe_times_of_use: 2
+Mapper.local_BA_increased_times_of_use: 0
+Mapper.loop_closure_increased_times_of_use_: 2
+Mapper.cull_keyframes: 0
+Mapper.large_rotation_threshold: 10.0
+Mapper.large_translation_threshold: 0.1
+Mapper.stable_num_iter_existence: 1
+
+GausPyramid.do: 0
+GausPyramid.num_sub_levels: 2
+GausPyramid.sub_level_times_of_use: 8
+
+Pipeline.convert_SHs: 0
+Pipeline.compute_cov3D: 0
+
+Record.keyframe_record_interval: 0
+Record.all_keyframes_record_interval: 0
+Record.record_rendered_image: 1
+Record.record_ground_truth_image: 1
+Record.record_loss_image: 0
+Record.training_report_interval: 0
+Record.record_loop_ply: 0
+
+#--------------------------------------------------------------------------------------------
+# Optimization Parameters
+#--------------------------------------------------------------------------------------------
+Optimization.max_num_iterations: 30000
+Optimization.position_lr_init: 0.0
+Optimization.position_lr_final: 0.0
+Optimization.position_lr_delay_mult: 0.01
+Optimization.position_lr_max_steps: 30000
+Optimization.feature_lr: 0.002
+Optimization.opacity_lr: 0.02
+Optimization.scaling_lr: 0.007
+Optimization.rotation_lr: 0.002
+
+Optimization.percent_dense: 0.01
+Optimization.lambda_dssim: 0.2
+
+Optimization.offset_lr_init: 0.08
+Optimization.offset_lr_final: 0.0001
+Optimization.offset_lr_delay_mult: 0.01
+Optimization.offset_lr_max_steps: 30000
+
+Optimization.mlp_opacity_lr_init: 0.002
+Optimization.mlp_opacity_lr_final: 0.00002
+Optimization.mlp_opacity_lr_delay_mult: 0.01
+Optimization.mlp_opacity_lr_max_steps: 30000
+
+Optimization.mlp_cov_lr_init: 0.004
+Optimization.mlp_cov_lr_final: 0.004
+Optimization.mlp_cov_lr_delay_mult: 0.01
+Optimization.mlp_cov_lr_max_steps: 30000
+
+Optimization.mlp_color_lr_init: 0.008
+Optimization.mlp_color_lr_final: 0.00005
+Optimization.mlp_color_lr_delay_mult: 0.01
+Optimization.mlp_color_lr_max_steps: 30000
+
+Optimization.mlp_featurebank_lr_init: 0.01
+Optimization.mlp_featurebank_lr_final: 0.00001
+Optimization.mlp_featurebank_lr_delay_mult: 0.01
+Optimization.mlp_featurebank_lr_max_steps: 30000
+
+Optimization.appearance_lr_init: 0.05
+Optimization.appearance_lr_final: 0.0005
+Optimization.appearance_lr_delay_mult: 0.01
+Optimization.appearance_lr_max_steps: 30000
+
+Optimization.start_stat: 500
+Optimization.update_from: 1500
+Optimization.update_interval: 100
+Optimization.update_until: 26000
+
+Optimization.min_opacity: 0.005
+Optimization.success_threshold: 0.8
+Optimization.densify_grad_threshold: 0.0002
+
+Mapper.use_frequency_regularization: 1
+Mapper.use_multi_resolution: 1
+Mapper.scale_num: 3
+Mapper.frequency_regulization_until: 25000
+Mapper.high_frequency_regularization_start: 5000
+Mapper.lambda_frequency_high: 0.01
+Mapper.lambda_frequency_low: 0
+
+Model.use_coarse_anchor: 0
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+GaussianViewer.glfw_window_width: 1400
+GaussianViewer.glfw_window_height: 1050
+GaussianViewer.image_scale: 0.5
+GaussianViewer.image_scale_main: 1.0
+GaussianViewer.camera_watch_dist: 0.000001
