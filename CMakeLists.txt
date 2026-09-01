@@ -283,6 +283,13 @@ target_link_libraries(euroc_stereo
     gaussian_mapper
     ${ORB_SLAM3_SOURCE_DIR}/lib/libORB_SLAM3.so)
 
+# TartanAir Stereo holdout evaluator (evaluation-only wrapper; core SLAM/GS logic unchanged)
+add_executable(tartanair_stereo_eval examples/tartanair_stereo_eval.cpp)
+target_link_libraries(tartanair_stereo_eval
+    gaussian_viewer
+    gaussian_mapper
+    ${ORB_SLAM3_SOURCE_DIR}/lib/libORB_SLAM3.so)
+
 # Scannet Mono //效果很差
 add_executable(scannet_mono examples/scannet_mono.cpp)
 target_link_libraries(scannet_mono
