@@ -32,7 +32,8 @@ Camera.height: 480
 
 # The Stereo Challenge package does not provide image timestamps.
 # The adapter script synthesizes timestamps at 10 Hz for ordering/time bookkeeping.
-Camera.fps: 10.0
+# ORB-SLAM3's settings parser requires this field to be an integer YAML scalar.
+Camera.fps: 10
 
 # cv::imread returns BGR images.
 Camera.RGB: 0
