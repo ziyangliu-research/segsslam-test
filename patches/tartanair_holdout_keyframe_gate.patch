@@ -1,0 +1,79 @@
+diff --git a/ORB-SLAM3/src/Tracking.cc b/ORB-SLAM3/src/Tracking.cc
+--- a/ORB-SLAM3/src/Tracking.cc
++++ b/ORB-SLAM3/src/Tracking.cc
+@@ -31,6 +31,7 @@
+ 
+ #include <mutex>
+ #include <chrono>
++#include <cstdlib>
+ 
+ 
+ using namespace std;
+@@ -38,6 +39,34 @@ using namespace std;
+ namespace ORB_SLAM3
+ {
+ 
++namespace
++{
++bool tartanAirHoldoutGateEnabled()
++{
++    return std::getenv("SEGS_HOLDOUT_PERIOD") != nullptr &&
++           std::getenv("SEGS_HOLDOUT_OFFSET") != nullptr;
++}
++
++bool suppressMappingForHoldoutFrame(const unsigned long frame_id)
++{
++    const char* period_env = std::getenv("SEGS_HOLDOUT_PERIOD");
++    const char* offset_env = std::getenv("SEGS_HOLDOUT_OFFSET");
++    if (!period_env || !offset_env)
++        return false;
++
++    char* period_end = nullptr;
++    char* offset_end = nullptr;
++    const long period = std::strtol(period_env, &period_end, 10);
++    const long offset = std::strtol(offset_env, &offset_end, 10);
++
++    if (!period_end || *period_end != '\0' || !offset_end || *offset_end != '\0' ||
++        period <= 0 || offset < 0 || offset >= period)
++        return false;
++
++    return (frame_id % static_cast<unsigned long>(period)) ==
++           static_cast<unsigned long>(offset);
++}
++}
++
+ 
+ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer, MapDrawer *pMapDrawer, Atlas *pAtlas, KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor, Settings* settings, const string &_nameSeq):
+@@ -2440,6 +2469,10 @@ void Tracking::StereoInitialization()
+ {
++    // Evaluation-only holdout gate: a TEST frame may be tracked against an
++    // existing map, but it must never initialize or extend the map.
++    if (suppressMappingForHoldoutFrame(mCurrentFrame.mnId))
++        return;
++
+     if(mCurrentFrame.N>500)
+     {
+         if (mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD)
+@@ -3190,6 +3223,11 @@ bool Tracking::NeedNewKeyFrame()
+ {
++    // Evaluation-only holdout gate. All normal pose estimation and
++    // TrackLocalMap() work has already run before this function is called;
++    // only keyframe/map insertion is suppressed for TEST frames.
++    if (suppressMappingForHoldoutFrame(mCurrentFrame.mnId))
++        return false;
++
+     if((mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD) && !mpAtlas->GetCurrentMap()->isImuInitialized())
+     {
+         if (mSensor == System::IMU_MONOCULAR && (mCurrentFrame.mTimeStamp-mpLastKeyFrame->mTimeStamp)>=0.25)
+@@ -4115,6 +4153,13 @@ void Tracking::InformOnlyTracking(const bool &flag)
+ {
++    // tartanair_stereo_eval historically toggled ORB-SLAM3 localization-only
++    // mode for TEST frames. When the dedicated holdout gate is enabled, keep
++    // the original SLAM tracking path active and let NeedNewKeyFrame() alone
++    // decide whether the current frame may enter the map.
++    if (tartanAirHoldoutGateEnabled()) {
++        mbOnlyTracking = false;
++        return;
++    }
+     mbOnlyTracking = flag;
+ }
